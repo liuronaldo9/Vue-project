@@ -20,7 +20,7 @@
                     </div>
                     <div class="cartcontrol-wrapper">
                         <v-cartcontrol  :food="food"></v-cartcontrol>
-                        <!-- <v-buy></v-buy> -->
+                        <!-- <v-specification></v-specification> -->
                     </div>
                 <transition name="fade">
                     <div class="buy" @click.stop.prevent="addFirst" v-show="!food.count || food.count===0">
@@ -68,7 +68,7 @@
 import Vue from 'vue';
 import BScroll from 'better-scroll';
 import cartcontrol from './../cartcontorl/cartcontorl';
-import buy from './../buy/buy';
+import specification from './../specification/specification';
 import split from './../split/split';
 import ratingselect from './../ratingselect/ratingselect';
 import {formatDate} from './../../common/js/date';
@@ -97,7 +97,7 @@ export default {
        'v-cartcontrol': cartcontrol,
        'v-split': split,
        'v-ratingselect': ratingselect,
-       'v-buy': buy
+       'v-specification': specification
     },
     methods: {
         show() {

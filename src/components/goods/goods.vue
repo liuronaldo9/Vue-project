@@ -32,7 +32,7 @@
                                     <span class="old" v-show="food.oldPrice">${{food.oldPrice}}</span>
                                 </div>
                                 <div class="cartcontrol-wrapper">
-                                    <v-buy v-show="food.spec_cats"></v-buy>
+                                    <v-specification v-show="food.spec_cats" :food="food" @click.native.stop.prevent="selectSpec(food, $event)"></v-specification>
                                     <v-cartcontrol  @add="addFood" :food="food" v-show="!food.spec_cats"></v-cartcontrol>
                                 </div>
                             </div>
@@ -41,6 +41,7 @@
                 </li>
             </ul>
         </div>
+        <v-popup :food="selectedSpec" ref="spec"></v-popup>
         <v-shopCart   ref="shopCart" :selectFoods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></v-shopCart>
     </div>
     <v-food :food="selectedFood" ref="food"></v-food>
@@ -52,7 +53,9 @@ import BScroll from 'better-scroll';
 import shopCart from './../shopCart/shopCart';
 import cartcontrol from './../cartcontorl/cartcontorl';
 import food from './../food/food';
-import buy from './../buy/buy';
+import specification from './../specification/specification';
+import popup from './../popup/popup';
+
 
 
 
@@ -67,14 +70,16 @@ export default {
        'v-shopCart':  shopCart,
        'v-cartcontrol': cartcontrol,
        'v-food': food,
-       'v-buy': buy
+       'v-specification': specification,
+       'v-popup': popup
     },
     data() {
         return {
             goods: [],
             listHeight: [],
             scrollY: 0,
-            selectedFood: {}
+            selectedFood: {},
+            selectedSpec: {}
         }
     },
     created() {
@@ -82,7 +87,6 @@ export default {
       result = result.body;
       if(result.errno === ERR_OK){
         this.goods = result.data
-        console.log(this.goods)
         this.$nextTick(() => {
             this._initScroll();
             this._calculateHeight();
@@ -118,9 +122,6 @@ export default {
         }
     },
     methods: {
-        selectSzie: function() {
-            console.log("sssss")
-        },
         _initScroll: function() {
             this.meunScroll = new BScroll(this.$refs.menuWrapper, {
                 click: true
@@ -169,6 +170,13 @@ export default {
           }
           this.selectedFood = food;
           this.$refs.food.show();
+      },
+      selectSpec(food, event) {
+          if(!event._constructed) {
+              return
+          }
+          this.selectedSpec = food;
+          this.$refs.spec.popup();
       },
       _followScroll(index) {
           let menuList = this.$refs.menuList;
